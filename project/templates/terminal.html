@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delta Trading Terminal</title>
+    <meta charset="UTF-8">
+    <script src="https://s3.tradingview.com/tv.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* LEFT SIDE */
+        #left-panel {
+            width: 280px;
+            background: #111827;
+            overflow-y: auto;
+            padding: 10px;
+            border-right: 1px solid #1e293b;
+        }
+
+        #left-panel h3 {
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .coin-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #1e293b;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .coin-item:hover {
+            background: #2563eb;
+        }
+
+        .active {
+            background: #2563eb !important;
+        }
+
+        .positive { color: #22c55e; }
+        .negative { color: #ef4444; }
+
+        /* RIGHT SIDE */
+        #right-panel {
+            flex: 1;
+            padding: 10px;
+        }
+
+        #chart {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Scrollbar */
+        #left-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #left-panel::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- LEFT PANEL -->
+<div id="left-panel">
+    <h3>Perpetual Futures</h3>
+    <div id="coin-list"></div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div id="right-panel">
+    <div id="chart"></div>
+</div>
+
+<script>
+let widget = null;
+let currentSymbol = "BTCUSDT";
+
+// 🔥 Read symbol from URL
+const params = new URLSearchParams(window.location.search);
+const urlSymbol = params.get("symbol");
+
+if (urlSymbol) {
+    currentSymbol = urlSymbol.toUpperCase();
+}
+
+// 🔹 Load Coin List
+async function loadCoins() {
+    try {
+        const res = await fetch("/data");
+        const data = await res.json();
+
+        const container = document.getElementById("coin-list");
+        container.innerHTML = "";
+
+        data.forEach(coin => {
+
+            const symbol = coin.symbol.toUpperCase();
+
+            const div = document.createElement("div");
+            div.className = "coin-item";
+            div.id = "coin-" + symbol;
+
+            const changeClass = coin.change >= 0 ? "positive" : "negative";
+
+            div.innerHTML = `
+                <strong>${symbol}</strong><br>
+                ${coin.price}<br>
+                <span class="${changeClass}">
+                    ${coin.change}%
+                </span>
+            `;
+
+            div.onclick = () => {
+                highlight(symbol);
+                loadChart(symbol);
+            };
+
+            container.appendChild(div);
+        });
+
+        highlight(currentSymbol);
+
+    } catch (err) {
+        console.log("Error loading coins:", err);
+    }
+}
+
+// 🔹 Load Chart
+function loadChart(symbol) {
+
+    currentSymbol = symbol.toUpperCase();
+
+    // 🔥 Update URL without reloading page
+    const newUrl = `/terminal?symbol=${currentSymbol}`;
+    window.history.pushState({ path: newUrl }, '', newUrl);
+
+    const chartDiv = document.getElementById("chart");
+    chartDiv.innerHTML = "";
+
+    setTimeout(() => {
+        widget = new TradingView.widget({
+            width: "100%",
+            height: "100%",
+            symbol: "BINANCE:" + currentSymbol,
+            interval: "15",
+            timezone: "Asia/Kolkata",
+            theme: "dark",
+            style: "1",
+            locale: "in",
+            enable_publishing: false,
+            container_id: "chart"
+        });
+    }, 50);
+}
+
+// 🔹 Highlight Active Coin
+function highlight(symbol) {
+    document.querySelectorAll(".coin-item").forEach(item => {
+        item.classList.remove("active");
+    });
+
+    const selected = document.getElementById("coin-" + symbol);
+    if (selected) {
+        selected.classList.add("active");
+    }
+}
+
+// 🔹 Initial Load
+window.onload = function() {
+    loadChart(currentSymbol);
+    loadCoins();
+    setInterval(loadCoins, 3000);
+};
+</script>
+
+</body>
+</html>
