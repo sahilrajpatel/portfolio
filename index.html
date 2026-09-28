@@ -1,551 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sahil Raj Patel | AI Portfolio</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sahil Raj Patel — Agent OS</title>
+<meta name="description" content="Sahil Raj Patel — AI Automation Engineer building RAG systems and multi-step AI agents. Portfolio styled as a live agent operating system.">
+<meta property="og:title" content="Sahil Raj Patel — Agent OS">
+<meta property="og:description" content="AI Automation Engineer · Generative AI · Agentic AI · LLM Apps. Explore projects, experience and stack inside a live desktop.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#080a1a; --violet:#6d4cf5; --cyan:#25d0e8; --magenta:#ef62c2; --mint:#3ee6a8; --amber:#ffae42;
+  --ink:#e8eaff; --dim:#8b93c9; --faint:#565f96;
+  --panel:rgba(13,16,42,.86); --line:rgba(160,170,255,.16); --barbg:rgba(8,10,26,.6);
+}
+:root[data-theme="light"]{
+  --bg0:#eef0fb; --ink:#171a33; --dim:#4c5382; --faint:#7a80ad;
+  --panel:rgba(255,255,255,.86); --line:rgba(60,66,140,.14); --barbg:rgba(255,255,255,.65);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  min-height:100%;height:100dvh;overflow:hidden;font-family:'JetBrains Mono',monospace;color:var(--ink);font-size:14px;
+  background:
+    radial-gradient(1100px circle at 15% -10%, rgba(109,76,245,.40), transparent 55%),
+    radial-gradient(900px circle at 95% 100%, rgba(37,208,232,.26), transparent 55%),
+    radial-gradient(700px circle at 60% 50%, rgba(239,98,194,.10), transparent 60%),
+    var(--bg0);
+  background-attachment:fixed; transition:background-color .3s;
+}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.3;z-index:0;
+  background-image:linear-gradient(rgba(160,170,255,.05) 1px, transparent 1px),linear-gradient(90deg, rgba(160,170,255,.05) 1px, transparent 1px);
+  background-size:42px 42px;mask-image:radial-gradient(circle at 30% 20%, black, transparent 70%)}
+#trail{position:fixed;inset:0;pointer-events:none;z-index:5}
 
-    <style>
-        /* --- THEME VARIABLES --- */
-        :root {
-            --bg-color: #000000;
-            --text-main: #ffffff;
-            --text-muted: #a1a1aa;
-            --card-bg: rgba(10, 10, 10, 0.7);
-            --border-color: #333;
-            --neon-red: #ff3333;
-        }
+/* boot */
+#boot{position:fixed;inset:0;z-index:60;background:var(--bg0);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+#boot .row{opacity:0;animation:bootin .25s forwards;font-size:12.5px;color:var(--dim)}
+#boot .row b{color:var(--mint)}
+#boot .bar{width:min(320px,70vw);height:3px;background:rgba(120,130,220,.15);border-radius:3px;margin-top:16px;overflow:hidden}
+#boot .bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--violet),var(--cyan));animation:load 1.7s .55s forwards}
+@keyframes bootin{to{opacity:1}} @keyframes load{to{width:100%}}
+#boot.out{animation:fade .4s forwards}
+@keyframes fade{to{opacity:0;visibility:hidden}}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+/* toast */
+#toast{position:fixed;top:calc(44px + env(safe-area-inset-top,0px));right:14px;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--mint);padding:9px 14px;border-radius:8px;font-size:12px;color:var(--ink);z-index:40;opacity:0;transform:translateY(-6px);transition:opacity .3s,transform .3s;backdrop-filter:blur(14px)}
+#toast.show{opacity:1;transform:none}
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
-        }
+/* top bar */
+.bar{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;height:32px;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:0 12px;background:var(--barbg);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);font-size:11.5px;color:var(--dim);z-index:9}
+.bar .left{display:flex;align-items:center;gap:14px;min-width:0}
+.bar b{font-family:Sora;color:var(--ink);display:flex;align-items:center;gap:6px;flex:none}
+.bar b::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px var(--mint)}
+.stat{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--faint)}
+.bar .right{display:flex;align-items:center;gap:10px;flex:none}
+#themeBtn{background:none;border:1px solid var(--line);color:var(--dim);border-radius:6px;width:22px;height:22px;font-size:11px;cursor:pointer;line-height:1}
 
-        /* --- NEURON CANVAS BACKGROUND --- */
-        #neuron-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: #000000;
-        }
+/* windows */
+.desk{position:fixed;inset:0;top:calc(32px + env(safe-area-inset-top,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:1}
+.win{position:absolute;background:var(--panel);backdrop-filter:blur(22px);border:1px solid var(--line);border-radius:12px;box-shadow:0 24px 70px rgba(0,0,0,.5);width:min(640px,92vw);min-width:260px;min-height:180px;overflow:hidden;resize:both;z-index:2;max-height:80vh;display:flex;flex-direction:column;border-top:2px solid var(--accent,var(--violet))}
+.th{display:flex;gap:8px;align-items:center;padding:10px 13px;background:rgba(130,140,255,.05);border-bottom:1px solid var(--line);cursor:grab;user-select:none;font-size:11.5px;color:var(--faint);touch-action:none;flex:none}
+.th:active{cursor:grabbing}
+.th i{width:11px;height:11px;border-radius:50%;background:#ff5f57;cursor:pointer;flex:none}
+.th i+i{background:#febc2e;cursor:default}.th i+i+i{background:#28c840;cursor:default}
+.th .ttl{margin-left:2px}
+.tb{padding:18px 20px 22px;overflow:auto;line-height:1.7;flex:1}
+.tb h1{font-family:Sora;font-weight:800;font-size:clamp(1.6rem,5vw,2.3rem);line-height:1.08;margin:6px 0 10px;background:linear-gradient(100deg,#8bf3ff,#c9b3ff 45%,#ff9be5);-webkit-background-clip:text;background-clip:text;color:transparent}
+.p{color:var(--cyan)}.g{color:var(--mint)}.d{color:var(--dim)}.m{color:var(--magenta)}
+.ln{opacity:0;animation:in .35s ease forwards}
+@keyframes in{from{opacity:0;transform:translateY(2px)}to{opacity:1;transform:none}}
+.cursor{display:inline-block;width:7px;height:1.1em;background:var(--mint);vertical-align:text-bottom;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
 
-        /* --- SPOTLIGHT --- */
-        .spotlight {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
-            background: radial-gradient(200px circle at var(--x) var(--y), rgba(255, 255, 255, 0.08), transparent 40%);
-        }
+.item{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px;position:relative}
+.item::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:2px;background:linear-gradient(var(--violet),var(--cyan));border-radius:2px;opacity:.7}
+.item h3{font-family:Sora;font-weight:700;font-size:1rem;color:var(--ink);margin-bottom:5px}
+.item .links{margin-top:8px}
+.tag{display:inline-block;font-size:10.5px;padding:3px 9px;margin:6px 6px 0 0;border-radius:20px;border:1px solid var(--line);color:var(--dim);letter-spacing:.02em}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(37,208,232,.35)}
+a:hover{border-bottom-color:var(--cyan)}
+a:focus-visible,button:focus-visible,.th i:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 
-        /* --- UTILITIES --- */
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
-        section { padding: 100px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
-        
-        h2.section-title {
-            font-size: 3rem; margin-bottom: 60px; text-transform: uppercase;
-            background: linear-gradient(to right, #fff, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+/* command input */
+.cmdline{display:flex;align-items:center;gap:6px;margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+.cmdline span{color:var(--mint);flex:none}
+.cmdline input{background:transparent;border:0;outline:0;color:var(--ink);font-family:inherit;font-size:13px;flex:1;min-width:0}
+.cmdhint{color:var(--faint);font-size:11px;margin-top:6px}
 
-        /* --- CARDS --- */
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 30px;
-            border-radius: 12px;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-        .glass-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.5); box-shadow: 0 0 30px rgba(255,255,255,0.1); }
+/* dock */
+.dock{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);display:flex;gap:10px;padding:9px 12px;border-radius:18px;background:var(--barbg);backdrop-filter:blur(20px);border:1px solid var(--line);z-index:9}
+.dock button{width:48px;height:48px;border:0;border-radius:12px;font-size:20px;cursor:pointer;background:linear-gradient(150deg,#5b3df0,#12b5cb);color:#fff;transition:transform .15s ease;position:relative}
+.dock button:hover,.dock button:focus-visible{transform:translateY(-6px)}
+.dock button[data-accent="proj"]{background:linear-gradient(150deg,#5b3df0,#8a6bff)}
+.dock button[data-accent="exp"]{background:linear-gradient(150deg,#12cb8f,#12b5cb)}
+.dock button[data-accent="stack"]{background:linear-gradient(150deg,#e256b8,#7a4dff)}
+.dock button[data-accent="mail"]{background:linear-gradient(150deg,#ffae42,#ff5f6d)}
+.dock button[data-accent="readme"]{background:linear-gradient(150deg,#25d0e8,#3ee6a8)}
+.dock button::after{content:"";position:absolute;bottom:-6px;left:50%;translate:-50% 0;width:4px;height:4px;border-radius:50%;background:var(--mint);opacity:0;transition:opacity .15s}
+.dock button.open::after{opacity:1}
+.dock .lbl{position:absolute;bottom:60px;left:50%;translate:-50% 0;font-size:10px;background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:3px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+.dock button:hover .lbl,.dock button:focus-visible .lbl{opacity:1}
 
-        /* --- BUTTONS --- */
-        .btn {
-            display: inline-block; padding: 14px 30px; border: 1px solid white; color: white;
-            font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
-            cursor: pointer;
-        }
-        .btn:hover { background: white; color: black; box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
+.hide{display:none}
 
-        /* --- HEADER & NAV --- */
-        header { position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 100; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; color: white; text-transform: uppercase; }
-        .nav-links { display: flex; gap: 40px; align-items: center; } 
-        .nav-links a:hover { text-shadow: 0 0 10px white; }
-
-        /* --- HERO --- */
-        .hero { height: 100vh; display: flex; align-items: center; position: relative; }
-        .hero h1 { font-size: 5rem; line-height: 1.1; margin-bottom: 20px; font-weight: 800; letter-spacing: -2px; }
-        .hero span { color: #888; }
-        .subtitle { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; max-width: 600px; }
-
-        /* --- SKILLS & TIMELINE --- */
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .tag { display: inline-block; border: 1px solid #444; padding: 5px 12px; margin: 4px; font-size: 0.8rem; border-radius: 20px; background: rgba(255,255,255,0.05); }
-        .timeline-item { border-left: 2px solid #333; padding-left: 30px; margin-bottom: 40px; position: relative; }
-        .timeline-item::before { content: ''; position: absolute; left: -6px; top: 5px; width: 10px; height: 10px; background: white; border-radius: 50%; box-shadow: 0 0 10px white; }
-        .timeline-header h3 { font-size: 1.4rem; color: white; }
-        .timeline-header span { color: var(--text-muted); font-family: monospace; font-size: 0.9rem; }
-
-        /* --- PROJECT GRID --- */
-        .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
-        .tech-stack { margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; flex-wrap: wrap; }
-        .tech-stack span { font-size: 0.75rem; font-family: monospace; color: #aaa; text-transform: uppercase; }
-
-        /* --- SPECIAL WEAPON CARD --- */
-        .weapon-card { border: 1px solid #500 !important; cursor: pointer !important; }
-        .weapon-card:hover { border-color: var(--neon-red) !important; box-shadow: 0 0 30px rgba(255, 51, 51, 0.2) !important; transform: translateY(-5px); }
-        .pulse { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-
-        /* --- MODAL --- */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 2000; align-items: center; justify-content: center; overflow-y: auto; }
-        .modal-content { background: #0a0a0a; border: 1px solid var(--neon-red); width: 90%; max-width: 900px; padding: 40px; position: relative; box-shadow: 0 0 50px rgba(255, 0, 0, 0.2); animation: slideUp 0.5s ease; margin: 50px auto; }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 2rem; color: var(--neon-red); cursor: pointer; z-index: 2001; }
-        .modal-header { border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
-        .modal-title { font-family: 'Rajdhani', sans-serif; font-size: 2.5rem; color: #fff; text-transform: uppercase; line-height: 1; }
-        .modal-badge { font-family: 'Rajdhani', sans-serif; background: rgba(255, 51, 51, 0.2); color: var(--neon-red); padding: 5px 15px; border: 1px solid var(--neon-red); display: inline-block; margin-bottom: 10px; font-weight: bold; letter-spacing: 1px; }
-        .modal-stats { display: flex; gap: 30px; margin: 30px 0; border: 1px solid #222; padding: 20px; background: #000; }
-        .stat h4 { font-family: 'Rajdhani', sans-serif; font-size: 2.2rem; color: var(--neon-red); margin-bottom: 5px; line-height: 1; }
-        .stat p { font-size: 0.8rem; color: #888; letter-spacing: 1px; }
-        .system-flow { display: flex; gap: 10px; margin-top: 30px; flex-wrap: wrap; }
-        .step { background: #111; padding: 15px; border: 1px solid #333; color: #ccc; flex: 1; text-align: center; min-width: 120px; }
-        .step i { color: var(--neon-red); font-size: 1.5rem; margin-bottom: 10px; display: block; }
-
-        /* FOOTER */
-        footer { padding: 50px 0; text-align: center; border-top: 1px solid #222; }
-        .social-links a { font-size: 1.5rem; margin: 0 15px; color: var(--text-muted); }
-        .social-links a:hover { color: white; transform: scale(1.2); }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 3.5rem; }
-            .nav-links { display: none; }
-            .modal-stats { flex-direction: column; }
-            .spotlight { display: none; }
-        }
-    </style>
-</head>
+@media (max-width:640px){
+  .win{width:94vw;max-height:72vh;resize:none}
+  .win[data-init]{left:3vw!important;top:44px!important;transform:none!important}
+  .stat{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition:none!important}}
+</style></head>
 <body>
 
-    <canvas id="neuron-canvas"></canvas>
+<canvas id="trail"></canvas>
 
-    <div class="spotlight"></div>
-
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">Sahil Raj Patel</div>
-                <div class="nav-links">
-                    <a href="#about">About</a>
-                    <a href="#skills">Skills</a>
-                    <a href="#projects">Work</a>
-                    
-                    <a href="sahilrajpatel.pdf" download="Sahil_Raj_Patel_Resume" class="btn" style="padding: 4px 16px 6px 16px; font-size: 0.8rem; border:none; border-bottom:1px solid white;">
-                        <i class="fas fa-download"></i> CV
-                    </a>
-                </div>
-            </nav>
-        </div>
-    </header>
-
-    <section class="hero">
-        <div class="container" data-aos="fade-up" data-aos-duration="1000">
-            <p style="color: #aaa; letter-spacing: 2px; margin-bottom: 10px;">DATA SCIENTIST & ML ENGINEER</p>
-            <h1>SAHIL RAJ PATEL<br><span>BUILDING INTELLIGENCE.</span></h1>
-            <p class="subtitle">Specialized in Computer Vision, Deep Learning, and Real-time AI Systems. Winner of TechSangram 2025.</p>
-            <div style="display: flex; gap: 20px;">
-                <a href="#projects" class="btn">View Projects</a>
-                <a href="sahilrajpatel.pdf" download="Sahil_Raj_Patel_Resume" class="btn" style="background: white; color: black;">Download CV</a>
-            </div>
-        </div>
-    </section>
-
-    <section id="skills">
-        <div class="container">
-            <h2 class="section-title" data-aos="fade-right">Technical Stack</h2>
-            <div class="skills-grid">
-                <div class="glass-card" data-aos="zoom-in">
-                    <i class="fas fa-brain" style="font-size: 2rem; margin-bottom: 15px; color:white;"></i>
-                    <h3>AI & ML Core</h3>
-                    <div style="margin-top: 10px;">
-                        <span class="tag">TensorFlow</span>
-                        <span class="tag">PyTorch</span>
-                        <span class="tag">YOLOv8</span>
-                        <span class="tag">OpenCV</span>
-                        <span class="tag">Scikit-Learn</span>
-                    </div>
-                </div>
-                <div class="glass-card" data-aos="zoom-in" data-aos-delay="100">
-                    <i class="fas fa-code" style="font-size: 2rem; margin-bottom: 15px; color:white;"></i>
-                    <h3>Development</h3>
-                    <div style="margin-top: 10px;">
-                        <span class="tag">Python</span>
-                        <span class="tag">C Programming</span>
-                        <span class="tag">SQL</span>
-                        <span class="tag">Flask API</span>
-                        <span class="tag">Docker</span>
-                    </div>
-                </div>
-                <div class="glass-card" data-aos="zoom-in" data-aos-delay="200">
-                    <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 15px; color:white;"></i>
-                    <h3>Data Analytics</h3>
-                    <div style="margin-top: 10px;">
-                        <span class="tag">Power BI</span>
-                        <span class="tag">Pandas</span>
-                        <span class="tag">NumPy</span>
-                        <span class="tag">EDA</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="about">
-        <div class="container">
-            <h2 class="section-title" data-aos="fade-right">Experience</h2>
-            <div class="timeline-item" data-aos="fade-up">
-                <div class="timeline-header">
-                    <h3>Data Science Intern @ CertED Technologies</h3>
-                    <span>June 2025 - July 2025</span>
-                </div>
-                <p style="margin-top: 10px;">
-                    • Built predictive ML models with <strong>90%+ accuracy</strong>.<br>
-                    • Improved performance by 12% via hyperparameter tuning.<br>
-                    • Deployed models using Docker & Flask REST APIs.
-                </p>
-            </div>
-            <div class="timeline-item" data-aos="fade-up">
-                <div class="timeline-header">
-                    <h3>B.Tech CSE (Data Science) @ Haridwar University</h3>
-                    <span>2023 - 2027</span>
-                </div>
-                <p style="margin-top: 10px;">
-                    • CGPA: <strong>8.2/10</strong><br>
-                    • Researching in Deep Learning & Computer Vision.<br>
-                    • Certified in C Programming (IIT Bombay) & Power BI.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects">
-        <div class="container">
-            <h2 class="section-title" data-aos="fade-right">Selected Works</h2>
-            <div class="project-grid">
-                
-                <div class="glass-card weapon-card" data-aos="fade-up" onclick="openModal()">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color: var(--neon-red);">Target-Lock System</h3>
-                        <i class="fas fa-crosshairs pulse" style="color: var(--neon-red);"></i>
-                    </div>
-                    <div style="margin: 10px 0;">
-                        <span style="color: var(--neon-red); font-size: 0.7rem; border: 1px solid var(--neon-red); padding: 2px 8px; font-family:'Rajdhani',sans-serif;">TOP SECRET</span>
-                    </div>
-                    <p style="color: #fff; font-size: 0.9rem; margin-bottom: 10px;">🏆 2nd Position - TechSangram 2025</p>
-                    <p>Autonomous AI precision targeting system using Face Recognition and YOLOv8.</p>
-                    <div class="tech-stack">
-                        <span style="border-color:#500; color:#eaa">OpenCV</span>
-                        <span style="border-color:#500; color:#eaa">YOLOv8</span>
-                        <span style="border-color:#500; color:#eaa">Arduino</span>
-                    </div>
-                    <p style="margin-top: 15px; font-size: 0.8rem; color: var(--neon-red); text-align: right; font-weight:bold;">CLICK TO DECLASSIFY &rarr;</p>
-                </div>
-<div class="glass-card"
-     data-aos="fade-up"
-     data-aos-delay="300"
-     onclick="window.open('/sahil','_blank')"
-     style="cursor:pointer;">
-
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>Crypto Alert Engine</h3>
-        <i class="fas fa-bell" style="opacity:0.7;"></i>
-    </div>
-
-    <p style="margin:15px 0;">
-        Real-time EMA crossover monitoring system for perpetual futures.
-        Scans 400+ coins across multiple timeframes and triggers automated
-        email alerts with Apply-On-All execution logic.
-    </p>
-
-    <div class="tech-stack">
-        <span>NEXT.JS</span>
-        <span>TYPESCRIPT</span>
-        <span>TAILWIND CSS</span>
-        <span>BINANCE API</span>
-        <span>REDUX</span>
-    </div>
-
-    <p style="margin-top:15px; font-size:0.8rem; text-align:right; font-weight:bold; color: #00ff41;">
-        LAUNCH TERMINAL →
-    </p>
-</div>
-    <div class="tech-stack">
-        <span>PYTHON</span>
-        <span>FLASK</span>
-        <span>PANDAS</span>
-        <span>EMA STRATEGY</span>
-        <span>REST API</span>
-    </div>
-
-    <p style="margin-top:15px; font-size:0.8rem; text-align:right; font-weight:bold; opacity:0.8;">
-        OPEN LIVE DASHBOARD →
-    </p>
-</div>
-<div class="glass-card" 
-     data-aos="fade-up" 
-     data-aos-delay="400" 
-     onclick="window.open('https://jap.sahilrajpatel.com/', '_blank')" 
-     style="cursor:pointer;">
-
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>Crypto Trading Hub</h3>
-        <i class="fas fa-chart-line" style="color: #00ff41; opacity:0.8;"></i>
-    </div>
-
-    <div style="margin: 10px 0;">
-        <span style="color: #00ff41; font-size: 0.7rem; border: 1px solid #00ff41; padding: 2px 8px; font-family:'Rajdhani',sans-serif;">LIVE SIMULATOR</span>
-    </div>
-
-    <p style="margin:15px 0;">
-        A high-performance paper trading platform for crypto assets. Features real-time price tracking, 
-        virtual portfolio management, and strategic trade execution without financial risk.
-    </p>
-    <div class="tech-stack">
-        <span>PYTHON</span>
-        <span>FLASK</span>
-        <span>PANDAS</span>
-        <span>EMA STRATEGY</span>
-        <span>REST API</span>
-    </div>
+<div id="boot">
+  <div class="row" style="animation-delay:.05s">agent-os <b>v2.2</b> — initializing kernel</div>
+  <div class="row" style="animation-delay:.25s">mounting <span class="p">/home/sahil</span> … <span class="g">ok</span></div>
+  <div class="row" style="animation-delay:.45s">starting session <b>sahil_raj_patel</b></div>
+  <div class="bar"><i></i></div>
 </div>
 
-                <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
-                    <div style="display:flex; justify-content:space-between;">
-                        <h3>Spotify RecSys</h3>
-                        <i class="fab fa-spotify"></i>
-                    </div>
-                    <p>Music recommendation engine using Collaborative Filtering & Cosine Similarity.</p>
-                    <div class="tech-stack">
-                        <span>Python</span>
-                        <span>Scikit-Learn</span>
-                        <span>TF-IDF</span>
-                    </div>
-                </div>
+<div id="toast">🟢 agent online — 3 processes running</div>
 
-                <div class="glass-card" data-aos="fade-up" data-aos-delay="200">
-                    <div style="display:flex; justify-content:space-between;">
-                        <h3>Analytics Dashboard</h3>
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <p>End-to-end data analysis dashboard for visualizing trends and predicting future outcomes.</p>
-                    <div class="tech-stack">
-                        <span>Power BI</span>
-                        <span>Pandas</span>
-                        <span>Matplotlib</span>
-                    </div>
-                </div>
+<div class="bar">
+  <div class="left">
+    <b>AgentOS</b>
+    <span class="stat">🚀 3 agents shipped · 🎯 94% recognition acc · 🏭 2 internships</span>
+  </div>
+  <div class="right">
+    <button id="themeBtn" title="Toggle theme">◐</button>
+    <span>sahil_raj_patel · online</span>
+    <span id="clk"></span>
+  </div>
+</div>
 
-            </div>
-        </div>
-    </section>
-    <section id="contact" style="border: none;">
-        <div class="container" style="text-align: center;">
-            <h2 style="margin-bottom: 20px;">LET'S WORK TOGETHER</h2>
-            <p style="margin-bottom: 40px;">Open for Data Science & ML Opportunities.</p>
-            <a href="mailto:sahilrajpatell.7@gmail.com" class="btn" style="text-transform: none;">sahilrajpatell.7@gmail.com</a>
-            
-            <div class="social-links" style="margin-top: 50px;">
-                <a href="https://www.linkedin.com/in/sahil-raj-patel-2357a8360" target="_blank">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-
-                <a href="https://github.com/sahilrajpatel" target="_blank">
-                    <i class="fab fa-github"></i>
-                </a>
-            </div>
-            <p style="margin-top: 50px; font-size: 0.8rem; opacity: 0.5;">Designed by Sahil Raj Patel © 2026</p>
-        </div>
-    </section>
-    <div id="weapon-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div class="modal-header">
-                <div class="modal-badge">TECHSANGRAM 2025 - 2ND WINNER</div>
-                <h2 class="modal-title">AUTONOMOUS <span style="color: var(--neon-red);">FACE-TARGETING</span> WEAPON</h2>
-            </div>
-            <p style="color: #ccc; font-size: 1.1rem; line-height: 1.6;">
-                A fully autonomous defense prototype designed to eliminate manual aiming. 
-                The system accepts a "Target Face" input, scans the environment using real-time Computer Vision, 
-                locks onto the specific individual, and engages the firing mechanism automatically.
-            </p>
-            <div class="modal-stats">
-                <div class="stat"><h4>94%</h4><p>RECOGNITION ACCURACY</p></div>
-                <div class="stat"><h4>30 FPS</h4><p>REAL-TIME TRACKING</p></div>
-                <div class="stat"><h4>150ms</h4><p>LOCK-ON SPEED</p></div>
-            </div>
-            
-            <h3 style="color: #fff; margin-bottom: 15px; font-family:'Rajdhani', sans-serif;">System Architecture</h3>
-            <div class="system-flow">
-                <div class="step"><i class="fas fa-eye"></i>Video Input</div>
-                <div class="step"><i class="fas fa-brain"></i>Face Detection</div>
-                <div class="step"><i class="fas fa-crosshairs"></i>Target Lock</div>
-                <div class="step"><i class="fas fa-microchip"></i>Arduino</div>
-                <div class="step"><i class="fas fa-fire"></i>Auto-Fire</div>
-            </div>
-
-            <div style="margin-top: 40px; text-align: center; border-top: 1px solid #333; padding-top: 30px;">
-                <a href="https://github.com/sahilrajpatel/AUTONOMOUS-FACE-TARGETING-WEAPON.git" target="_blank" class="btn" style="border-color: var(--neon-red); color: var(--neon-red); background: rgba(255, 51, 51, 0.05);">
-                    <i class="fab fa-github" style="margin-right: 8px;"></i> ACCESS SOURCE CODE
-                </a>
-            </div>
-
-        </div>
+<div class="desk">
+  <div class="win" id="w-term" data-init style="top:6%;left:50%;transform:translateX(-50%)">
+    <div class="th"><i data-x tabindex="0" role="button" aria-label="Close"></i><i></i><i></i><span class="ttl">sahil@agent:~ — zsh</span></div>
+    <div class="tb" id="term">
+      <div class="cmdline"><span>$</span><input id="cmd" autocomplete="off" spellcheck="false" placeholder="type a command…" aria-label="terminal command input"></div>
+      <div class="cmdhint">try: <span class="p">open projects</span> · <span class="p">open resume</span> · <span class="p">theme light</span> · <span class="p">help</span></div>
     </div>
+  </div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ duration: 1000, once: true });
+  <div class="win hide" id="w-proj" style="top:14%;left:6%;--accent:var(--violet)">
+    <div class="th"><i data-x tabindex="0" role="button" aria-label="Close"></i><i></i><i></i><span class="ttl">~/projects</span></div>
+    <div class="tb">
+      <div class="item"><h3>📚 RAG Application</h3><span class="d">PDF/text ingestion, embeddings, semantic retrieval; LangGraph retrieval → generation nodes for grounded answers.</span><br><span class="tag">LangChain</span><span class="tag">LangGraph</span><span class="tag">OpenAI</span><span class="tag">Pinecone</span>
+        <div class="links"><a href="https://github.com/sahilrajpatel" target="_blank" rel="noopener">View on GitHub →</a></div></div>
+      <div class="item"><h3>🤖 AI Automation Agent</h3><span class="d">Agentic browser tools: navigate, search, YouTube, WhatsApp, form filling. Persistent browser state across multi-step tasks.</span><br><span class="tag">LangGraph</span><span class="tag">Playwright</span>
+        <div class="links"><a href="https://github.com/sahilrajpatel" target="_blank" rel="noopener">View on GitHub →</a></div></div>
+      <div class="item"><h3>🎯 Face Tracking &amp; Target Locking</h3><span class="d">~30 FPS real-time recognition, 94% accuracy, 15% fewer false detections. <span class="g">2nd place · TechSangram 2025</span></span><br><span class="tag">YOLOv8</span><span class="tag">OpenCV</span>
+        <div class="links"><a href="https://github.com/sahilrajpatel" target="_blank" rel="noopener">View on GitHub →</a></div></div>
+    </div>
+  </div>
 
-        // --- NEURON NETWORK ANIMATION (CANVAS) ---
-        const canvas = document.getElementById('neuron-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+  <div class="win hide" id="w-exp" style="top:20%;right:6%;--accent:var(--mint)">
+    <div class="th"><i data-x tabindex="0" role="button" aria-label="Close"></i><i></i><i></i><span class="ttl">experience.log</span></div>
+    <div class="tb">
+      <div class="item"><h3>Tata Motors India · 2026</h3><span class="d">AI/Data Science Intern, Jamshedpur. Automated part-shortage tracking with Outlook VBA + Excel BoM logic, Power BI dashboard, auto email alerts to buyers.</span></div>
+      <div class="item"><h3>CertED Technologies · 2025</h3><span class="d">Data Science Intern. ML models 90%+ accuracy, +12% via tuning; deployed with Flask + Docker.</span></div>
+    </div>
+  </div>
 
-        let particlesArray;
+  <div class="win hide" id="w-stack" style="top:26%;left:10%;--accent:var(--magenta)">
+    <div class="th"><i data-x tabindex="0" role="button" aria-label="Close"></i><i></i><i></i><span class="ttl">stack.json</span></div>
+    <div class="tb">
+      <span class="p">"genai"</span>: <span class="tag">LLMs</span><span class="tag">RAG</span><span class="tag">LoRA</span><span class="tag">QLoRA</span><span class="tag">Hugging Face</span><br>
+      <span class="p">"agents"</span>: <span class="tag">LangChain</span><span class="tag">LangGraph</span><span class="tag">LlamaIndex</span><span class="tag">Tool Calling</span><span class="tag">Multi-Agent</span><br>
+      <span class="p">"data"</span>: <span class="tag">Pinecone</span><span class="tag">PostgreSQL</span><span class="tag">Embeddings</span><br>
+      <span class="p">"automation"</span>: <span class="tag">n8n</span><span class="tag">OpenAI API</span><span class="tag">Gemini API</span><span class="tag">VBA</span><br>
+      <span class="p">"ml"</span>: <span class="tag">PyTorch</span><span class="tag">TensorFlow</span><span class="tag">OpenCV</span><span class="tag">YOLOv8</span>
+    </div>
+  </div>
 
-        // Mouse position (Only for spotlight visual, NOT physics)
-        let mouse = {
-            x: null,
-            y: null
-        }
+  <div class="win hide" id="w-mail" style="top:18%;right:10%;--accent:var(--amber)">
+    <div class="th"><i data-x tabindex="0" role="button" aria-label="Close"></i><i></i><i></i><span class="ttl">contact.sh</span></div>
+    <div class="tb">
+      <p class="g">$ ./hire_sahil.sh</p>
+      <p style="margin-top:8px">✉ <a href="mailto:sahilrajpatel1.7@gmail.com">sahilrajpatel1.7@gmail.com</a></p>
+      <p style="margin-top:6px">in <a href="https://www.linkedin.com/in/sahil-raj-patel-2357a8360" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/sahilrajpatel" target="_blank" rel="noopener">GitHub</a></p>
+      <p style="margin-top:6px">📞 +91-9835388863</p>
+      <p style="margin-top:6px">⬇ <a href="sahilrajpatel.pdf" download>Download resume.pdf</a></p>
+    </div>
+  </div>
 
-        window.addEventListener('mousemove', 
-            function(event) {
-                mouse.x = event.x;
-                mouse.y = event.y;
-                
-                // Update spotlight position
-                const spotlight = document.querySelector('.spotlight');
-                if(spotlight) {
-                    spotlight.style.setProperty('--x', `${mouse.x}px`);
-                    spotlight.style.setProperty('--y', `${mouse.y}px`);
-                }
-            }
-        );
+  <div class="win hide" id="w-readme" style="top:10%;left:30%;--accent:var(--cyan)">
+    <div class="th"><i data-x tabindex="0" role="button" aria-label="Close"></i><i></i><i></i><span class="ttl">readme.md</span></div>
+    <div class="tb">
+      <h3 style="font-family:Sora;font-size:1.1rem;margin-bottom:8px">Sahil Raj Patel</h3>
+      <p class="d">AI Automation Engineer focused on generative and agentic AI — building systems that retrieve, reason and take multi-step action with tools, not just answer questions.</p>
+      <p style="margin-top:12px"><span class="p">Core skills</span></p>
+      <p class="d">RAG pipelines &amp; vector search · multi-agent orchestration (LangGraph) · browser automation agents · applied CV (YOLOv8) · model fine-tuning (LoRA/QLoRA) · dashboards &amp; workflow automation (Power BI, n8n, VBA)</p>
+      <p style="margin-top:12px"><span class="p">Currently</span></p>
+      <p class="d">AI/Data Science intern at Tata Motors India, shipping automation tools used by the buying team.</p>
+      <p style="margin-top:12px">⬇ <a href="sahilrajpatel.pdf" download>Download full resume.pdf</a></p>
+    </div>
+  </div>
+</div>
 
-        // Create Particle
-        class Particle {
-            constructor(x, y, directionX, directionY, size, color) {
-                this.x = x;
-                this.y = y;
-                this.directionX = directionX;
-                this.directionY = directionY;
-                this.size = size;
-                this.color = color;
-            }
-            // Draw particle
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = '#666'; 
-                ctx.fill();
-            }
-            // Update particle position (NO MOUSE INTERACTION)
-            update() {
-                // Bounce off edges
-                if (this.x > canvas.width || this.x < 0) {
-                    this.directionX = -this.directionX;
-                }
-                if (this.y > canvas.height || this.y < 0) {
-                    this.directionY = -this.directionY;
-                }
+<div class="dock">
+  <button data-o="w-proj" data-accent="proj" aria-label="Projects">🚀<span class="lbl">Projects</span></button>
+  <button data-o="w-exp" data-accent="exp" aria-label="Experience">🏭<span class="lbl">Experience</span></button>
+  <button data-o="w-stack" data-accent="stack" aria-label="Stack">🧠<span class="lbl">Stack</span></button>
+  <button data-o="w-mail" data-accent="mail" aria-label="Contact">✉️<span class="lbl">Contact</span></button>
+  <button data-o="w-readme" data-accent="readme" aria-label="Readme">📄<span class="lbl">Readme</span></button>
+</div>
 
-                // Just move naturally
-                this.x += this.directionX;
-                this.y += this.directionY;
-                
-                this.draw();
-            }
-        }
+<script>
+/* boot + toast */
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('boot').classList.add('out');
+    setTimeout(()=>document.getElementById('boot').remove(),450);
+    const toast=document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),3200);
+  },1500);
+});
 
-        // Create particle array
-        function init() {
-            particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 9000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 1) - 0.5;
-                let directionY = (Math.random() * 1) - 0.5;
-                let color = '#555'; 
+/* terminal boot lines */
+const L=[
+  '<span class="d">Last login: today on ttys001</span>',
+  '<span class="g">$</span> whoami',
+  '<h1>Sahil Raj Patel</h1>',
+  'AI Automation Engineer · <span class="p">Generative AI</span> · <span class="p">Agentic AI</span> · LLM Apps',
+  '<span class="g">$</span> cat about.txt',
+  'I build RAG systems and multi-step AI agents that use tools and finish real tasks.<br>Tata Motors AI intern. 2nd place, TechSangram 2025.',
+  '<span class="g">$</span> ls dock/',
+  '<span class="d">→ tap 🚀 🏭 🧠 ✉️ 📄 below, or type a command</span><span class="cursor"></span>'
+];
+const term=document.getElementById('term');
+const cmdline=term.querySelector('.cmdline');
+L.forEach((h,i)=>{
+  const d=document.createElement('div');
+  d.className='ln';
+  d.style.animationDelay=(1.6+i*.4)+'s';
+  d.innerHTML=h;
+  term.insertBefore(d,cmdline);
+});
 
-                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
-            }
-        }
+/* dock open/close */
+let z=10;
+function openWin(id){
+  const w=document.getElementById(id);
+  if(!w) return;
+  w.classList.remove('hide');
+  w.style.zIndex=++z;
+  const btn=document.querySelector('[data-o="'+id+'"]');
+  if(btn) btn.classList.add('open');
+}
+function closeWin(id){
+  const w=document.getElementById(id);
+  if(!w) return;
+  w.classList.add('hide');
+  const btn=document.querySelector('[data-o="'+id+'"]');
+  if(btn) btn.classList.remove('open');
+}
+document.querySelectorAll('[data-o]').forEach(btn=>{
+  btn.onclick=()=>{
+    const w=document.getElementById(btn.dataset.o);
+    w.classList.contains('hide') ? openWin(btn.dataset.o) : closeWin(btn.dataset.o);
+  };
+});
+document.querySelectorAll('[data-x]').forEach(x=>{
+  const close=()=>closeWin(x.closest('.win').id);
+  x.addEventListener('click',close);
+  x.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); close(); } });
+});
 
-        // Connect particles with lines
-        function connect() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
-                    + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width/7) * (canvas.height/7)) {
-                        opacityValue = 1 - (distance/20000);
-                        ctx.strokeStyle = 'rgba(150, 150, 150,' + opacityValue + ')';
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
+/* command palette */
+const MAP={projects:'w-proj',project:'w-proj',experience:'w-exp',exp:'w-exp',stack:'w-stack',contact:'w-mail',mail:'w-mail',readme:'w-readme',resume:'w-readme'};
+document.getElementById('cmd').addEventListener('keydown',e=>{
+  if(e.key!=='Enter') return;
+  const raw=e.target.value.trim().toLowerCase();
+  const line=document.createElement('div');
+  line.className='ln';
+  line.innerHTML='<span class="g">$</span> '+raw.replace(/</g,'&lt;');
+  cmdline.parentNode.insertBefore(line,cmdline);
+  const parts=raw.split(/\s+/);
+  if(parts[0]==='open' && MAP[parts[1]]) openWin(MAP[parts[1]]);
+  else if(parts[0]==='close' && MAP[parts[1]]) closeWin(MAP[parts[1]]);
+  else if(parts[0]==='theme' && (parts[1]==='light'||parts[1]==='dark')) setTheme(parts[1]);
+  else if(raw==='clear') term.querySelectorAll('.ln').forEach(n=>n.remove());
+  else if(raw==='help'){
+    const h=document.createElement('div'); h.className='ln';
+    h.innerHTML='<span class="d">commands: open [projects|experience|stack|contact|resume] · close [name] · theme [dark|light] · clear</span>';
+    cmdline.parentNode.insertBefore(h,cmdline);
+  } else if(MAP[parts[0]]) openWin(MAP[parts[0]]);
+  else {
+    const h=document.createElement('div'); h.className='ln';
+    h.innerHTML='<span class="d">command not found — try "help"</span>';
+    cmdline.parentNode.insertBefore(h,cmdline);
+  }
+  cmdline.scrollIntoView({block:'nearest'});
+  e.target.value='';
+});
 
-        // Animation Loop
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.clearRect(0, 0, innerWidth, innerHeight);
-            
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-            }
-            connect();
-        }
+/* dragging */
+document.querySelectorAll('.win').forEach(w=>{
+  const h=w.querySelector('.th');
+  h.addEventListener('pointerdown',e=>{
+    if(e.target.hasAttribute('data-x')) return;
+    const r=w.getBoundingClientRect();
+    const ox=e.clientX-r.left, oy=e.clientY-r.top;
+    w.style.zIndex=++z; w.style.transform='none'; w.style.right='auto';
+    w.style.left=r.left+'px'; w.style.top=r.top+'px';
+    const mv=e=>{ w.style.left=Math.max(4,e.clientX-ox)+'px'; w.style.top=Math.max(4,e.clientY-oy)+'px'; };
+    const up=()=>{ document.removeEventListener('pointermove',mv); document.removeEventListener('pointerup',up); };
+    document.addEventListener('pointermove',mv);
+    document.addEventListener('pointerup',up,{once:true});
+  });
+});
 
-        // Resize event
-        window.addEventListener('resize', 
-            function() {
-                canvas.width = innerWidth;
-                canvas.height = innerHeight;
-                init();
-            }
-        );
+/* theme toggle */
+function setTheme(mode){
+  document.documentElement.setAttribute('data-theme',mode);
+  document.getElementById('themeBtn').textContent = mode==='light' ? '◑' : '◐';
+  try{ localStorage.setItem('agentos-theme',mode); }catch(e){}
+}
+document.getElementById('themeBtn').onclick=()=>{
+  const cur=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';
+  setTheme(cur);
+};
+(function(){
+  let saved='dark';
+  try{ saved=localStorage.getItem('agentos-theme')||'dark'; }catch(e){}
+  setTheme(saved);
+})();
 
-        init();
-        animate();
-        // --- END NEURON ANIMATION ---
+/* clock */
+const clk=document.getElementById('clk');
+const tick=()=>clk.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+tick(); setInterval(tick,1000);
 
-        // Modal Logic
-        function openModal() { document.getElementById('weapon-modal').style.display = 'flex'; document.body.style.overflow = 'hidden'; }
-        function closeModal() { document.getElementById('weapon-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
-        window.onclick = function(event) { if (event.target == document.getElementById('weapon-modal')) closeModal(); }
-    </script>
-</body>
-
-</html>
+/* subtle cursor trail (desktop only, respects reduced motion) */
+(function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+  if(reduce || isTouch) return;
+  const c=document.getElementById('trail'), ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){ W=c.width=innerWidth; H=c.height=innerHeight; }
+  resize(); addEventListener('resize',resize);
+  addEventListener('pointermove',e=>{ pts.push({x:e.clientX,y:e.clientY,t:Date.now()}); if(pts.length>18) pts.shift(); });
+  (function loop(){
+    ctx.clearRect(0,0,W,H);
+    const now=Date.now();
+    pts=pts.filter(p=>now-p.t<500);
+    for(let i=0;i<pts.length;i++){
+      const p=pts[i], age=(now-p.t)/500, r=Math.max(0,3*(1-age));
+      ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2);
+      ctx.fillStyle='rgba(125,249,255,'+(0.25*(1-age))+')';
+      ctx.fill();
+    }
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+</body></html>
